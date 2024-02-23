@@ -1,56 +1,99 @@
 using GestionePratiche.Models;
+using GestionePratiche.Services.PraticheService.SuperHeroAPI.Services.PraticheService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 
 namespace GestionePratiche.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("[controller]")]
     public class PraticheController : ControllerBase
     {
+        private readonly IPraticheService _praticheService;
 
-        private readonly ILogger<PraticheController> _logger;
-
-        public PraticheController(ILogger<PraticheController> logger)
+        public PraticheController(IPraticheService praticheService)
         {
-            this._logger = logger;
+            _praticheService = praticheService;
         }
 
-        [HttpPost("Crea")]
+        [HttpGet]
         //[Authorize] // Aggiungi autenticazione JWT
-        public IActionResult CreazionePratica([FromBody] DatiCreazionePraticaRequest request)
+        public async Task<ActionResult<List<Pratiche>>> GetAllExistingPratiche()
         {
-            
-            // Logica per la creazione di una nuova pratica
-            // Genera un IdPratica univoco
-            // Salva i dati nel database
-
-            return Ok(new { IdPratica = 123 });
+            try
+            {
+                return await this._praticheService.GetAllExisistingPratiche();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-
-
-        [HttpPut("Aggiorna/{idPratica}")]
-        [Authorize] // Aggiungi autenticazione JWT
-        public IActionResult AggiornaPratica(string idPratica, [FromBody] DatiAggiornamentoPraticaRequest request)
-        {
-            // Logica per l'aggiornamento di una pratica esistente
-            // Verifica l'esistenza di idPratica nel database
-            // Aggiorna i dati della pratica
-
-            return Ok();
-        }
-
 
         [HttpGet("{idPratica}")]
-        [Authorize] // Aggiungi autenticazione JWT
-        public IActionResult DettagliPratica(string idPratica)
+        //[Authorize] // Aggiungi autenticazione JWT
+        public async Task<ActionResult<Pratiche>> GetExistingPratica(int idPratica)
         {
-            // Logica per ottenere informazioni dettagliate su una pratica
-            // Verifica l'esistenza di idPratica nel database
-            // Restituisci le informazioni dettagliate
+            try
+            {
+                var result = await this._praticheService.GetExisistingPratica(idPratica);
+                if (result is null) return NotFound("La pratica richiesta non esiste!");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-            return Ok(); //dettagliPratica
+        [HttpPost("Create")]
+        //[Authorize] // Aggiungi autenticazione JWT
+        public async Task<ActionResult<List<Pratiche>>> CreatePratica([FromBody] Pratiche pratica)
+        {
+            try
+            {
+                var result = await this._praticheService.AddNewPratica(pratica);
+                if (result is null) return NotFound("Errore durante la creazione della pratica!");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpPut("Update/{idPratica}")]
+        //[Authorize] // Aggiungi autenticazione JWT
+        public async Task<ActionResult<List<Pratiche>>> UpdateExisistingPratica(int idPratica, [FromBody] Pratiche pratica)
+        {
+            try
+            {
+                var result = await this._praticheService.UpdateExisistingPratica(idPratica, pratica);
+                if (result is null) return BadRequest("Errore durante l'aggiornamento della pratica!");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("Delete/{idPratica}")]
+        //[Authorize] // Aggiungi autenticazione JWT
+        public async Task<ActionResult<List<Pratiche>>> DeleteExistingPratica(int idPratica)
+        {
+            try
+            {
+                var result = await this._praticheService.DeleteExisistingPratica(idPratica);
+                if (result is null)
+                    return NotFound("Pratica da cancellare non trovata nel database!");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("download/{idPratica}")]
@@ -60,7 +103,6 @@ namespace GestionePratiche.Controllers
             // Logica per il download del PDF allegato di una pratica
             // Verifica l'esistenza di idPratica nel database
             // Restituisci il file PDF
-            System.IO.File.ReadAllText("");
             byte[] fileStream = new byte[4];
             return File(fileStream, "application/pdf", "AllegatoPratica.pdf");
         }
