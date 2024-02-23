@@ -16,6 +16,8 @@ namespace GestionePratiche.Controllers
             _praticheService = praticheService;
         }
 
+        #region BASE CRUD
+
         [HttpGet]
         //[Authorize] // Aggiungi autenticazione JWT
         public async Task<ActionResult<List<Pratiche>>> GetAllExistingPratiche()
@@ -95,6 +97,7 @@ namespace GestionePratiche.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        #endregion
 
         [HttpGet("download/{idPratica}")]
         [Authorize] // Aggiungi autenticazione JWT
