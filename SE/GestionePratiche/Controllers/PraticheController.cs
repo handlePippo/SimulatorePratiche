@@ -10,11 +10,14 @@ namespace GestionePratiche.Controllers
     [Authorize]
     public class PraticheController : ControllerBase
     {
+        private readonly ILogger<PraticheController> _logger;
         private readonly IPraticheService _praticheService;
 
-        public PraticheController(IPraticheService praticheService)
+        public PraticheController(IPraticheService praticheService, ILogger<PraticheController> logger)
         {
+            _logger = logger;
             _praticheService = praticheService;
+            _logger.LogInformation("PraticheController istanziato");
         }
 
         #region BASE CRUD
@@ -28,6 +31,7 @@ namespace GestionePratiche.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
                 return BadRequest(ex.Message);
             }
         }
