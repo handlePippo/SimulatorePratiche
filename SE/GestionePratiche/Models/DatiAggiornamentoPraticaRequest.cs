@@ -2,8 +2,7 @@
 {
     public class DatiAggiornamentoPraticaRequest
     {
-        public StatoCivile? StatoCivile { get; set; }
-        public int? Telefono { get; set; }
-        public FileStream? AllegatoPratica { get; set; }
+        public long? Telefono { get; set; }
+        public IFormFile? Allegato { get; set; }
     }
 }

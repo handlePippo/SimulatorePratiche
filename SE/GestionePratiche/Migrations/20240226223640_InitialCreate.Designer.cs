@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GestionePratiche.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240224111353_InitialCreate")]
+    [Migration("20240226223640_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,9 +44,24 @@ namespace GestionePratiche.Migrations
                     b.Property<DateTime>("DataNascita")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte[]>("DocByte")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Telefono")
+                        .HasColumnType("bigint");
 
                     b.HasKey("IdPratica");
 

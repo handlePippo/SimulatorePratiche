@@ -18,7 +18,11 @@ namespace GestionePratiche.Migrations
                     CodiceFiscale = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
                     DataNascita = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cognome = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Cognome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Telefono = table.Column<long>(type: "bigint", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DocByte = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
                 constraints: table =>
                 {

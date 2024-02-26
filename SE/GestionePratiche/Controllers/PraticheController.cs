@@ -52,7 +52,7 @@ namespace GestionePratiche.Controllers
         }
 
         [HttpPost("Create")]
-        public async Task<ActionResult<Response>> CreatePratica([FromBody] PraticaRequest pratica)
+        public async Task<ActionResult<Response>> CreatePratica([FromForm] PraticaRequest pratica)
         {
             try
             {
@@ -68,11 +68,11 @@ namespace GestionePratiche.Controllers
 
 
         [HttpPut("Update/{idPratica}")]
-        public async Task<ActionResult<List<Pratica>>> UpdateExisistingPratica(int idPratica, [FromBody] Pratica pratica)
+        public async Task<ActionResult<List<Pratica>>> UpdateExisistingPratica(int idPratica, [FromForm] DatiAggiornamentoPraticaRequest partialPratica)
         {
             try
             {
-                var result = await this._praticheService.UpdateExisistingPratica(idPratica, pratica);
+                var result = await this._praticheService.UpdateExisistingPratica(idPratica, partialPratica);
                 if (result is null) return BadRequest("Errore durante l'aggiornamento della pratica!");
                 return Ok(result);
             }
@@ -108,7 +108,6 @@ namespace GestionePratiche.Controllers
             byte[] fileStream = new byte[4];
             return File(fileStream, "application/pdf", "AllegatoPratica.pdf");
         }
-
 
         [HttpPost("AvanzaStato/{idPratica}")]
         public IActionResult AvanzaStatoPratica(string idPratica)

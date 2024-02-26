@@ -42,9 +42,24 @@ namespace GestionePratiche.Migrations
                     b.Property<DateTime>("DataNascita")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte[]>("DocByte")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Telefono")
+                        .HasColumnType("bigint");
 
                     b.HasKey("IdPratica");
 

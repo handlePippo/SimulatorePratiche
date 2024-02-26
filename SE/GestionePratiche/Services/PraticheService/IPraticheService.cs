@@ -8,13 +8,13 @@ namespace GestionePratiche.Services.PraticheService
         {
             //GET
             Task<List<Pratica>> GetAllExisistingPratiche();
-            Task<Pratica?> GetExisistingPratica(int id);
+            Task<Response> GetExisistingPratica(int id);
             //POST
             Task<Response> AddNewPratica(PraticaRequest pratica);
             //UPDATE
-            Task<List<Pratica>?> UpdateExisistingPratica(int id, Pratica pratica);
+            Task<Response> UpdateExisistingPratica(int id, DatiAggiornamentoPraticaRequest pratica);
             //DELETE
-            Task<List<Pratica>?> DeleteExisistingPratica(int id);
+            Task<Response> DeleteExisistingPratica(int id);
         }
     }
 }

@@ -16,6 +16,10 @@ namespace GestionePratiche.Models
         public string Nome { get; set; }
         [Required]
         public string Cognome { get; set; }
-        //public FileStream AllegatoPratica { get; set; }
+        [Required]
+        public long Telefono { get; set; }
+        public string FileName { get; set; }
+        public string FileType { get; set; }
+        public byte[] DocByte { get; set; }
     }
 }

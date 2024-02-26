@@ -2,7 +2,8 @@
 {
     public class Response
     {
-        public int code { get; set; }
-        public string message { get; set; }
+        public int Code { get; set; }
+        public string Message { get; set; }
+        public Pratica? Pratica { get; set; }
     }
 }
