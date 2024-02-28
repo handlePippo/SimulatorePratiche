@@ -1,0 +1,10 @@
+
+# dotNET C#
+bin/
+.vs/
+obj/
+packages/
+WebSite/
+publish/
+*.publishproj
+PublishProfiles/
