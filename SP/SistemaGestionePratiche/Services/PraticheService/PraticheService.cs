@@ -14,23 +14,14 @@ namespace GestionePratiche.Services.PraticheService
         }
 
         public async Task<List<Pratica>> GetAllExisistingPratiche() => await this._context.ListPratiche.ToListAsync();
-        public async Task<Response> GetExisistingPratica(int id)
+        public async Task<ApiResponse> GetExisistingPratica(int id)
         {
             var pratica = await this._context.ListPratiche.FindAsync(id);
-            if (pratica is not null) return new Response
-            {
-                Code = 200,
-                Message = $"Pratica richiesta - Numero: {id}",
-                Pratica = pratica,
-            };
-            return new Response
-            {
-                Code = 500,
-                Message = "Errore durante l'aggiornamento della pratica",
-            };
-
+            if (pratica is not null) return new ApiResponse(200, $"Pratica richiesta - Numero: {id}", pratica);
+            return new ApiResponse(500, "La pratica richiesta non esiste!");
         }
-        public async Task<Response> AddNewPratica(PraticaRequest pratica)
+
+        public async Task<ApiResponse> AddNewPratica(PraticaRequest pratica)
         {
             var p = new Pratica
             {
@@ -44,23 +35,18 @@ namespace GestionePratiche.Services.PraticheService
             {
                 using var stream = new MemoryStream();
                 pratica.Allegato.CopyTo(stream);
-                var fileData = stream.ToArray();
-                p.DocByte = fileData;
+                p.FileByte = stream.ToArray();
                 p.FileName = pratica.Allegato.FileName;
-                p.FileType = pratica.Allegato.ContentType;
+                p.FileType = pratica.Allegato.ContentType ?? "Pdf";
             }
 
             await this._context.ListPratiche.AddAsync(p);
             await this._context.SaveChangesAsync();
 
-            return new Response
-            {
-                Code = 200,
-                Message = "Pratica aggiunta con successo",
-            };
+            return new ApiResponse(200, "Pratica aggiunta con successo");
         }
 
-        public async Task<Response> UpdateExisistingPratica(int id, DatiAggiornamentoPraticaRequest partialPratica)
+        public async Task<ApiResponse> UpdateExisistingPratica(int id, DatiAggiornamentoPraticaRequest partialPratica)
         {
             var updatedPratica = await this._context.ListPratiche.FindAsync(id);
             if (updatedPratica is not null)
@@ -71,44 +57,27 @@ namespace GestionePratiche.Services.PraticheService
                 {
                     using var stream = new MemoryStream();
                     partialPratica.Allegato.CopyTo(stream);
-                    var fileData = stream.ToArray();
-                    updatedPratica.DocByte = fileData;
+                    updatedPratica.FileByte = stream.ToArray();
                     updatedPratica.FileName = partialPratica.Allegato.FileName;
-                    updatedPratica.FileType = partialPratica.Allegato.ContentType;
+                    updatedPratica.FileType = partialPratica.Allegato.ContentType ?? "Pdf";
                 }
 
                 await this._context.SaveChangesAsync();
-                return new Response
-                {
-                    Code = 200,
-                    Message = "Pratica aggiornata con successo!",
-                };
+                return new ApiResponse(200, "Pratica aggiornata con successo!");
             }
-            return new Response
-            {
-                Code = 500,
-                Message = "Errore durante l'aggiornamento della pratica!",
-            };
+            return new ApiResponse(500, "Errore durante l'aggiornamento della pratica!");
         }
 
-        public async Task<Response> DeleteExisistingPratica(int id)
+        public async Task<ApiResponse> DeleteExisistingPratica(int id)
         {
             var praticaToDelete = await this._context.ListPratiche.FindAsync(id);
             if (praticaToDelete is not null)
             {
                 this._context.ListPratiche.Remove(praticaToDelete);
                 await this._context.SaveChangesAsync();
-                return new Response
-                {
-                    Code = 200,
-                    Message = "Pratica eliminata con successo!"
-                };
+                return new ApiResponse(200, "Pratica eliminata con successo!");
             }
-            return new Response
-            {
-                Code = 500,
-                Message = "Errore durante l'eliminazione della pratica!",
-            };
+            return new ApiResponse(500, "Errore durante l'eliminazione della pratica!");
         }
     }
 }

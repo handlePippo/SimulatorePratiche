@@ -7,7 +7,7 @@ namespace GestionePratiche.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class PraticheController : ControllerBase
     {
         private readonly ILogger<PraticheController> _logger;
@@ -52,7 +52,7 @@ namespace GestionePratiche.Controllers
         }
 
         [HttpPost("Create")]
-        public async Task<ActionResult<Response>> CreatePratica([FromForm] PraticaRequest pratica)
+        public async Task<ActionResult<ApiResponse>> CreatePratica([FromForm] PraticaRequest pratica)
         {
             try
             {

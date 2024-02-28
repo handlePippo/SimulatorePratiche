@@ -13,6 +13,7 @@ namespace GestionePratiche.Models
         public string Nome { get; set; }
         [Required]
         public string Cognome { get; set; }
+        public long Telefono { get; set; }
         public IFormFile Allegato { get; set; }
     }
 }

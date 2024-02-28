@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace GestionePratiche.Migrations
+namespace SistemaGestionePratiche.Migrations
 {
     public partial class InitialCreate : Migration
     {
@@ -22,7 +22,7 @@ namespace GestionePratiche.Migrations
                     Telefono = table.Column<long>(type: "bigint", nullable: false),
                     FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FileType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DocByte = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    FileByte = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
                 constraints: table =>
                 {

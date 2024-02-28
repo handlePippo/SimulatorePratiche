@@ -1,25 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace GestionePratiche.Models
+﻿namespace GestionePratiche.Models
 {
-    public class Pratica
+    public class PraticaResponse
     {
-        [Key]
-        public int IdPratica { get; private set; }
-        [Required]
-        [StringLength(16)]
+        public int IdPratica { get; set; }
         public string CodiceFiscale { get; set; }
-        [Required]
         public DateTime DataNascita { get; set; }
-        [Required]
         public string Nome { get; set; }
-        [Required]
         public string Cognome { get; set; }
-        [Required]
         public long Telefono { get; set; }
         public string FileName { get; set; }
         public string FileType { get; set; }
         public byte[] FileByte { get; set; }
+    }
+
+    public class PraticaResponseWithStatus
+    {
+        public int Code { get; set; }
+        public string Message { get; set; }
+        public PraticaResponse? Pratica { get; set; }
     }
 }

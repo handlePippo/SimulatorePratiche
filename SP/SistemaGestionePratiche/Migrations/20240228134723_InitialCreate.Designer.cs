@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace GestionePratiche.Migrations
+namespace SistemaGestionePratiche.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240226223640_InitialCreate")]
+    [Migration("20240228134723_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,7 +44,7 @@ namespace GestionePratiche.Migrations
                     b.Property<DateTime>("DataNascita")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte[]>("DocByte")
+                    b.Property<byte[]>("FileByte")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 

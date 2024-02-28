@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using SistemaEsterno.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,11 +23,11 @@ var builder = WebApplication.CreateBuilder(args);
 //         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
 //     };
 // });
-
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<HttpClientService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

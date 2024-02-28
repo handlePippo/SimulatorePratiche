@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace GestionePratiche.Migrations
+namespace SistemaGestionePratiche.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -42,7 +42,7 @@ namespace GestionePratiche.Migrations
                     b.Property<DateTime>("DataNascita")
                         .HasColumnType("datetime2");
 
-                    b.Property<byte[]>("DocByte")
+                    b.Property<byte[]>("FileByte")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
