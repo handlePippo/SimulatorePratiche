@@ -17,9 +17,9 @@ namespace GestionePratiche.Models
         [Required]
         public string Cognome { get; set; }
         [Required]
+        [StringLength(8)]
         public long Telefono { get; set; }
         public string FileName { get; set; }
-        public string FileType { get; set; }
         public byte[] FileByte { get; set; }
     }
 }

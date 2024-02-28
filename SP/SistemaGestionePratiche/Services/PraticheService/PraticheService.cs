@@ -29,6 +29,7 @@ namespace GestionePratiche.Services.PraticheService
                 CodiceFiscale = pratica.CodiceFiscale,
                 Cognome = pratica.Cognome,
                 Nome = pratica.Nome,
+                Telefono = pratica.Telefono,
             };
 
             if (pratica.Allegato != null && pratica.Allegato.Length > 0)
@@ -37,7 +38,6 @@ namespace GestionePratiche.Services.PraticheService
                 pratica.Allegato.CopyTo(stream);
                 p.FileByte = stream.ToArray();
                 p.FileName = pratica.Allegato.FileName;
-                p.FileType = pratica.Allegato.ContentType ?? "Pdf";
             }
 
             await this._context.ListPratiche.AddAsync(p);
@@ -59,7 +59,6 @@ namespace GestionePratiche.Services.PraticheService
                     partialPratica.Allegato.CopyTo(stream);
                     updatedPratica.FileByte = stream.ToArray();
                     updatedPratica.FileName = partialPratica.Allegato.FileName;
-                    updatedPratica.FileType = partialPratica.Allegato.ContentType ?? "Pdf";
                 }
 
                 await this._context.SaveChangesAsync();

@@ -1,6 +1,6 @@
 ﻿using GestionePratiche.Models;
 using Microsoft.AspNetCore.Mvc;
-using SistemaEsterno.Services;
+using SistemaEsterno.Services.HttpClientService;
 using System.Text.Json;
 
 namespace SistemaEsternoController.Controllers
@@ -65,6 +65,7 @@ namespace SistemaEsternoController.Controllers
                     { new StringContent(pratica.DataNascita.ToString()), "DataNascita" },
                     { new StringContent(pratica.Nome), "Nome" },
                     { new StringContent(pratica.Cognome), "Cognome" },
+                    { new StringContent(pratica.Telefono.ToString()), "Telefono" },
                 };
 
                 using var stream = pratica.Allegato.OpenReadStream();
@@ -102,10 +103,11 @@ namespace SistemaEsternoController.Controllers
                 var uri = new UriBuilder("http://localhost:5190/api/Pratiche/Update");
                 uri.Path += $"/{idPratica}";
 
-                using var formContent = new MultipartFormDataContent
+                using var formContent = new MultipartFormDataContent();
+                if(partialPratica.Telefono is not null)
                 {
-                    { new StringContent(partialPratica.Telefono.ToString() ?? "0"), "Telefono" },
-                };
+                    formContent.Add(new StringContent(partialPratica.Telefono.ToString()), "Telefono");
+                }
 
                 if (partialPratica.Allegato is not null)
                 {

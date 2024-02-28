@@ -1,14 +1,14 @@
-﻿namespace SistemaEsterno.Services
+﻿namespace SistemaEsterno.Services.HttpClientService
 {
-    public class HttpClientService
+    public class HttpClientService : IHttpClientService
     {
         private readonly HttpClient _httpClient;
         private readonly ILogger<HttpClientService> _logger;
 
         public HttpClientService(IHttpClientFactory httpClientFactory, ILogger<HttpClientService> logger)
         {
-            this._httpClient = httpClientFactory.CreateClient();
-            this._logger = logger;
+            _httpClient = httpClientFactory.CreateClient();
+            _logger = logger;
         }
 
         public async Task<T> GetFromJsonAsync<T>(string requestUri)
