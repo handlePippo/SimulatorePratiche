@@ -7,8 +7,9 @@
         public DateTime DataNascita { get; set; }
         public string Nome { get; set; }
         public string Cognome { get; set; }
-        public long Telefono { get; set; }
+        public string Telefono { get; set; }
         public string FileName { get; set; }
+        public string FileType { get; set; }
         public byte[] FileByte { get; set; }
     }
 

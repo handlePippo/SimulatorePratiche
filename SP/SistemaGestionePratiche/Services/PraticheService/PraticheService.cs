@@ -67,6 +67,20 @@ namespace GestionePratiche.Services.PraticheService
             return new ApiResponse(500, "Errore durante l'aggiornamento della pratica!");
         }
 
+        public async Task<ApiResponse> UpdateStatoPratica(int id, Stato stato)
+        {
+            var updatedPratica = await this._context.ListPratiche.FindAsync(id);
+            if (updatedPratica is not null)
+            {
+                updatedPratica.Stato = stato;
+                updatedPratica.DataUpdate = DateTime.Now;
+
+                await this._context.SaveChangesAsync();
+                return new ApiResponse(200, "Stato della pratica aggiornato con successo!");
+            }
+            return new ApiResponse(500, "Errore durante l'aggiornamento dello stato della pratica!");
+        }
+
         public async Task<ApiResponse> DeleteExisistingPratica(int id)
         {
             var praticaToDelete = await this._context.ListPratiche.FindAsync(id);

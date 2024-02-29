@@ -39,7 +39,13 @@ namespace SistemaGestionePratiche.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("DataCreazione")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("DataNascita")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataUpdate")
                         .HasColumnType("datetime2");
 
                     b.Property<byte[]>("FileByte")
@@ -50,16 +56,17 @@ namespace SistemaGestionePratiche.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FileType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Telefono")
-                        .HasColumnType("bigint");
+                    b.Property<int>("Stato")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
 
                     b.HasKey("IdPratica");
 

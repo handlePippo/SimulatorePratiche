@@ -19,10 +19,12 @@ namespace SistemaGestionePratiche.Migrations
                     DataNascita = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Cognome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Telefono = table.Column<long>(type: "bigint", nullable: false),
+                    Telefono = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
                     FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FileType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FileByte = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    FileByte = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Stato = table.Column<int>(type: "int", nullable: false),
+                    DataCreazione = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataUpdate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -32,7 +32,7 @@ namespace LoginController.Controllers
             var Sectoken = new JwtSecurityToken(_configuration["Jwt:Issuer"],
               _configuration["Jwt:Issuer"],
               null,
-              expires: DateTime.Now.AddMinutes(5),
+              expires: DateTime.Now.AddDays(1),
               signingCredentials: credentials);
 
             var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);

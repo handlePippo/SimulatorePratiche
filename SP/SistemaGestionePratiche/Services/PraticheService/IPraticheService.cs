@@ -13,6 +13,8 @@ namespace GestionePratiche.Services.PraticheService
             Task<ApiResponse> AddNewPratica(PraticaRequest pratica);
             //UPDATE
             Task<ApiResponse> UpdateExisistingPratica(int id, DatiAggiornamentoPraticaRequest pratica);
+            //UPDATE STATO
+            Task<ApiResponse> UpdateStatoPratica(int id, Stato stato);
             //DELETE
             Task<ApiResponse> DeleteExisistingPratica(int id);
         }

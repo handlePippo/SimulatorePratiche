@@ -2,22 +2,29 @@ using GestionePratiche.Models;
 using GestionePratiche.Services.PraticheService.SuperHeroAPI.Services.PraticheService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace GestionePratiche.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class PraticheController : ControllerBase
     {
+        private string _connectionString;
+        private IConfiguration _configuration;
         private readonly ILogger<PraticheController> _logger;
         private readonly IPraticheService _praticheService;
 
-        public PraticheController(IPraticheService praticheService, ILogger<PraticheController> logger)
+        public PraticheController(IPraticheService praticheService, ILogger<PraticheController> logger, IConfiguration config)
         {
             _logger = logger;
             _praticheService = praticheService;
+            _configuration = config;
+            _connectionString = _configuration.GetSection("ConnectionString").Value;
             _logger.LogInformation("PraticheController istanziato");
+            Initialization();
         }
 
         #region BASE CRUD
@@ -47,6 +54,7 @@ namespace GestionePratiche.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
                 return BadRequest(ex.Message);
             }
         }
@@ -62,6 +70,7 @@ namespace GestionePratiche.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
                 return BadRequest(ex.Message);
             }
         }
@@ -78,6 +87,7 @@ namespace GestionePratiche.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
                 return BadRequest(ex.Message);
             }
         }
@@ -94,28 +104,90 @@ namespace GestionePratiche.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex);
                 return BadRequest(ex.Message);
             }
         }
         #endregion
 
-        //[HttpPost("AvanzaStato/{idPratica}")]
-        //public IActionResult AvanzaStatoPratica(string idPratica)
-        //{
-        //    // Logica per l'avanzamento di stato di una pratica
-        //    // Verifica l'esistenza di idPratica nel database
-        //    // Esegui l'avanzamento di stato
+        [HttpPost("AvanzaStato/{idPratica}")]
+        public async Task<ActionResult> AvanzaStatoPratica(int idPratica, Stato stato)
+        {
+            try
+            {
+                var result = await this._praticheService.UpdateStatoPratica(idPratica, stato);
+                if (result is null) return BadRequest("Errore durante l'aggiornamento della pratica!");
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                return BadRequest(ex.Message);
+            }
+        }
 
-        //    return Ok();
-        //}
+        #region Callback
+        private void Initialization()
+        {
+            // Create a dependency connection.
+            //SqlDependency.Start(_con, queueName);
+            SqlDependency.Start(_connectionString);
+            GetDataWithSqlDependency();
+        }
 
-        //[HttpPost("CallbackStato")]
-        //public IActionResult CallbackCambioStato([FromBody] CallbackCambioStatoRequest callbackRequest)
-        //{
-        //    // Logica per gestire la callback di cambio di stato
-        //    // Emetti eventi o esegui le azioni necessarie
+        private void Termination()
+        {
+            // Release the dependency.
+            //SqlDependency.Stop(_con, queueName);
+            SqlDependency.Stop(_connectionString);
+        }
 
-        //    return Ok();
-        //}
+        private DataTable GetDataWithSqlDependency()
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                using (var cmd = new SqlCommand("SELECT Stato FROM dbo.ListPratiche;", connection))
+                {
+                    var dt = new DataTable();
+
+                    // Create dependency for this command and add event handler
+                    var dependency = new SqlDependency(cmd);
+                    dependency.OnChange += new OnChangeEventHandler(OnDependencyChange);
+
+                    // execute command to get data
+                    connection.Open();
+                    dt.Load(cmd.ExecuteReader(CommandBehavior.CloseConnection));
+
+                    return dt;
+                }
+            }
+        }
+
+        // Handler method
+        private async void OnDependencyChange(object sender, SqlNotificationEventArgs e)
+        {
+            Console.WriteLine($"OnChange Event fired. SqlNotificationEventArgs: Info={e.Info}, Source={e.Source}, Type={e.Type}.");
+
+            if ((e.Info != SqlNotificationInfo.Invalid) && (e.Type != SqlNotificationType.Subscribe))
+            {
+                Console.WriteLine("Notification Info: " + e.Info);
+                Console.WriteLine("Notification source: " + e.Source);
+                Console.WriteLine("Notification type: " + e.Type);
+
+                // resubscribe
+                var dt = GetDataWithSqlDependency();
+
+                Console.WriteLine($"Data changed. {dt.Rows.Count} rows returned.");
+                // TODO: Fare un httpClient verso il Sistema Esterno. 
+                // Prendere la lista delle pratiche e prendere il dato piu aggiornato order by desc di data update (prendere solo il primo, fare top 1)
+                //var res = await this._praticheService.GetAllExisistingPratiche();
+                //res.Select(p => p.DataUpdate).OrderBy(p => p)
+            }
+            else
+            {
+                Console.WriteLine("SqlDependency not restarted");
+            }
+        }
+        #endregion
     }
 }

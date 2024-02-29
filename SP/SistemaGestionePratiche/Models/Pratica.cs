@@ -18,8 +18,11 @@ namespace GestionePratiche.Models
         public string Cognome { get; set; }
         [Required]
         [StringLength(8)]
-        public long Telefono { get; set; }
+        public string Telefono { get; set; }
         public string FileName { get; set; }
         public byte[] FileByte { get; set; }
+        public Stato Stato { get; set; } = Stato.Creata;
+        public DateTime DataCreazione { get; set; } = DateTime.Now;
+        public DateTime DataUpdate { get; set; } = DateTime.Now;  
     }
 }

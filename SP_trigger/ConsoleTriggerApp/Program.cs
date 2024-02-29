@@ -7,7 +7,7 @@ namespace ConsoleTriggerApp
     internal class Program
     {
         //private static string _con = "data source=DESKTOP-485P455; initial catalog=Gestione_Pratiche; integrated security=True";
-        private static string _con = "Data Source=DESKTOP-485P455;Initial Catalog=Gestione_Pratiche; Trusted_Connection=True; Persist Security Info=False; User ID=sa;Password=;Connect Timeout=10";
+        private static string _con = "Server=PC-Filippo;Database=Gestione_Pratiche;Trusted_Connection=True;TrustServerCertificate=True;";
 
         static void Main(string[] args)
         {
@@ -40,7 +40,7 @@ namespace ConsoleTriggerApp
         {
             using (var connection = new SqlConnection(_con))
             {
-                using (var cmd = new SqlCommand("SELECT Id FROM dbo.Gestione_Pratiche;", connection))
+                using (var cmd = new SqlCommand("SELECT Nome FROM dbo.ListPratiche;", connection))
                 {
                     var dt = new DataTable();
 

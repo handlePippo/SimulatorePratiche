@@ -4,6 +4,8 @@ using GestionePratiche.Services.PraticheService;
 using GestionePratiche.Services.PraticheService.SuperHeroAPI.Services.PraticheService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Serilog.Sinks.Elasticsearch;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,11 +28,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
      };
  });
 
+//ELK Configuration
+builder.Host.UseSerilog((context, loggerConfiguration) =>
+{
+    loggerConfiguration
+    .WriteTo.Console()
+    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200")));
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPraticheService, PraticheService>();
 builder.Services.AddDbContext<DataContext>();
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.ClearProviders(); // Rimuovi eventuali provider di logging predefiniti
+    loggingBuilder.AddSerilog();
+});
 
 var app = builder.Build();
 
