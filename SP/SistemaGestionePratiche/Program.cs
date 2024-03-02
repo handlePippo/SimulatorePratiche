@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog.Sinks.Elasticsearch;
 using Serilog;
+using SistemaGestionePratiche.Repository.PraticheRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPraticheService, PraticheService>();
+builder.Services.AddScoped<IPraticheRepository, PraticheRepository>();
 builder.Services.AddDbContext<DataContext>();
 builder.Services.AddLogging(loggingBuilder =>
 {

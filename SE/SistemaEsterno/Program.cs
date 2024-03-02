@@ -5,24 +5,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
-//var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
-
-// Jwt configuration
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-// .AddJwtBearer(options =>
-// {
-//     options.TokenValidationParameters = new TokenValidationParameters
-//     {
-//         ValidateIssuer = true,
-//         ValidateAudience = true,
-//         ValidateLifetime = true,
-//         ValidateIssuerSigningKey = true,
-//         ValidIssuer = jwtIssuer,
-//         ValidAudience = jwtIssuer,
-//         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
-//     };
-// });
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<HttpClientService>();
 builder.Services.AddControllers();
@@ -36,9 +18,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-//app.UseAuthorization();
-//app.UseAuthentication();
 
 app.MapControllers();
 

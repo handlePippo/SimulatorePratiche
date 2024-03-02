@@ -2,13 +2,16 @@
 {
     public class HttpClientService : IHttpClientService
     {
+        private readonly IConfiguration _configuration;
         private readonly HttpClient _httpClient;
         private readonly ILogger<HttpClientService> _logger;
 
-        public HttpClientService(IHttpClientFactory httpClientFactory, ILogger<HttpClientService> logger)
+        public HttpClientService(IHttpClientFactory httpClientFactory, ILogger<HttpClientService> logger, IConfiguration config)
         {
-            _httpClient = httpClientFactory.CreateClient();
-            _logger = logger;
+            this._configuration = config;
+            this._httpClient = httpClientFactory.CreateClient();
+            this._httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + _configuration.GetSection("Token").Value);
+            this._logger = logger;
         }
 
         public async Task<T> GetFromJsonAsync<T>(string requestUri)

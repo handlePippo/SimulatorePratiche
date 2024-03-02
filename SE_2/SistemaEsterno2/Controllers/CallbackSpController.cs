@@ -1,5 +1,4 @@
-﻿using GestionePratiche.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SistemaEsterno.Services.HttpClientService;
 using SistemaEsterno2.Models;
 
@@ -24,7 +23,7 @@ namespace SistemaEsterno2Controller.Controllers
         [HttpPost("CallbackStato")]
         public IActionResult CallbackCambioStato([FromBody] CallbackCambioStatoRequest callbackRequest)
         {
-
+            _logger.LogInformation("Callback cambiata di stato"); // + dati della pratica della quale è cambiato stato.
             return Ok();
         }
     }

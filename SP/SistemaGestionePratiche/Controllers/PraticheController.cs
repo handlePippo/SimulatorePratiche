@@ -12,8 +12,8 @@ namespace GestionePratiche.Controllers
     [Authorize]
     public class PraticheController : ControllerBase
     {
-        private string _connectionString;
-        private IConfiguration _configuration;
+        private readonly string _connectionString;
+        private readonly IConfiguration _configuration;
         private readonly ILogger<PraticheController> _logger;
         private readonly IPraticheService _praticheService;
 
@@ -129,42 +129,36 @@ namespace GestionePratiche.Controllers
         #region Callback
         private void Initialization()
         {
-            // Create a dependency connection.
-            //SqlDependency.Start(_con, queueName);
+            // Crea una dependency connection.
             SqlDependency.Start(_connectionString);
             GetDataWithSqlDependency();
         }
 
         private void Termination()
         {
-            // Release the dependency.
-            //SqlDependency.Stop(_con, queueName);
+            // Rilascia la dipendenza.
             SqlDependency.Stop(_connectionString);
         }
 
         private DataTable GetDataWithSqlDependency()
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                using (var cmd = new SqlCommand("SELECT Stato FROM dbo.ListPratiche;", connection))
-                {
-                    var dt = new DataTable();
+            using var connection = new SqlConnection(_connectionString);
+            using var cmd = new SqlCommand("SELECT Stato FROM dbo.ListPratiche;", connection);
+            var dt = new DataTable();
 
-                    // Create dependency for this command and add event handler
-                    var dependency = new SqlDependency(cmd);
-                    dependency.OnChange += new OnChangeEventHandler(OnDependencyChange);
+            // Crea una dipendenza per questo cmd ed aggiunge un event handler
+            var dependency = new SqlDependency(cmd);
+            dependency.OnChange += new OnChangeEventHandler(OnDependencyChange);
 
-                    // execute command to get data
-                    connection.Open();
-                    dt.Load(cmd.ExecuteReader(CommandBehavior.CloseConnection));
+            // Esegue il comando per prendere i dati.
+            connection.Open();
+            dt.Load(cmd.ExecuteReader(CommandBehavior.CloseConnection));
 
-                    return dt;
-                }
-            }
+            return dt;
         }
 
         // Handler method
-        private async void OnDependencyChange(object sender, SqlNotificationEventArgs e)
+        private void OnDependencyChange(object sender, SqlNotificationEventArgs e)
         {
             Console.WriteLine($"OnChange Event fired. SqlNotificationEventArgs: Info={e.Info}, Source={e.Source}, Type={e.Type}.");
 
@@ -179,15 +173,50 @@ namespace GestionePratiche.Controllers
 
                 Console.WriteLine($"Data changed. {dt.Rows.Count} rows returned.");
                 // TODO: Fare un httpClient verso il Sistema Esterno. 
-                // Prendere la lista delle pratiche e prendere il dato piu aggiornato order by desc di data update (prendere solo il primo, fare top 1)
-                //var res = await this._praticheService.GetAllExisistingPratiche();
-                //res.Select(p => p.DataUpdate).OrderBy(p => p)
+                // Prendere la lista delle pratiche e prendere il dato piu aggiornato (order by desc di data update) (prendere solo il primo, fare top 1)
+
             }
             else
             {
                 Console.WriteLine("SqlDependency not restarted");
             }
         }
+
+        //[HttpPost]
+        //public async Task<ActionResult> CreatePratica([FromForm] PraticaRequest pratica)
+        //{
+        //    try
+        //    {
+
+        //        var res = await this._praticheService.GetAllExisistingPratiche();
+        //        res.Select(p => p.DataUpdate).OrderBy(p => p);
+
+        //        var uri = new UriBuilder("http://localhost:5190/api/Pratiche/Create");
+
+        //        var httpClient = new HttpClient();
+
+        //        using var response = await httpClient.PostAsync(uri.ToString(), );
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            var options = new JsonSerializerOptions
+        //            {
+        //                PropertyNameCaseInsensitive = true
+        //            };
+        //            var content = response.Content.ReadAsStringAsync().Result;
+        //            var postResponse = JsonSerializer.Deserialize<PraticaResponseWithStatus>(content, options);
+        //            return postResponse;
+        //        }
+        //        _logger.LogError("Errore sconosciuto. La pratica non è stata creata.");
+        //        return BadRequest("Errore sconosciuto. La pratica non è stata creata.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex.Message);
+        //        _logger.LogError(ex.StackTrace);
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
         #endregion
     }
 }
