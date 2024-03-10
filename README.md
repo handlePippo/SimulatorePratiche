@@ -1,1 +1,1 @@
-
+Small microservices application that simulates the life cycle of a case. N external systems contact a Practice Management System through an HTTPClient, which saves the data on the db through the repository pattern and through the use of entity framework core. There is also a microservice dedicated exclusively to authentication and which generates a JWT Bearer token.
